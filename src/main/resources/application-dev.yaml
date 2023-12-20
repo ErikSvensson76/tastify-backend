@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: "tastify-backend"
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    tomcat:
+      test-while-idle: true
+      validation-query: SELECT 1
+      initial-size: 15
+      max-wait: 20000
+      max-active: 50
+      max-idle: 15
+      min-idle: 8
+      default-auto-commit: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    open-in-view: off
+server:
+  port: ${APPLICATION_PORT:8080}
+  servlet:
+    context-path: '/api'
