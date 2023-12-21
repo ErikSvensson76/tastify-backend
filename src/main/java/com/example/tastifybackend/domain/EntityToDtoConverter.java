@@ -9,9 +9,6 @@ import com.example.tastifybackend.domain.recipe_ingredient.RecipeIngredient;
 import com.example.tastifybackend.domain.recipe_ingredient.dto.RecipeIngredientDto;
 import com.example.tastifybackend.domain.recipe_instruction.RecipeInstruction;
 import com.example.tastifybackend.domain.recipe_instruction.dto.RecipeInstructionDto;
-import com.example.tastifybackend.domain.recipe_review.RecipeReview;
-import com.example.tastifybackend.domain.recipe_review.dto.RecipeReviewDto;
-import com.example.tastifybackend.domain.recipe_review.service.AverageReviewScoreStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +21,6 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class EntityToDtoConverter {
-
-    private final AverageReviewScoreStorage reviewScoreStorage;
 
     private AuditDto buildAuditDto(Timestamp created, Timestamp lastModified){
         return AuditDto.builder()
@@ -73,29 +68,6 @@ public class EntityToDtoConverter {
         return dto;
     }
 
-    public RecipeReviewDto recipeReviewToDto(RecipeReview recipeReview) {
-        RecipeReviewDto dto = null;
-        if(recipeReview != null){
-            dto = RecipeReviewDto.builder()
-                    .id(recipeReview.getId())
-                    .comment(recipeReview.getComment())
-                    .score(recipeReview.getScore())
-                    .audit(buildAuditDto(recipeReview.getCreated(), recipeReview.getLastModified()))
-                    .build();
-        }
-        return dto;
-    }
-
-    public RecipeReviewDto recipeReviewToDtoFull(RecipeReview recipeReview) {
-        return Optional.ofNullable(recipeReviewToDto(recipeReview))
-                .map(recipeReviewDto -> {
-                    recipeReviewDto.setRecipe(
-                            recipeToDto(recipeReview.getRecipe())
-                    );
-                    return recipeReviewDto;
-                }).orElse(null);
-    }
-
     public RecipeDto recipeToDto(Recipe recipe) {
         RecipeDto dto = null;
         if(recipe != null){
@@ -104,7 +76,6 @@ public class EntityToDtoConverter {
                     .recipeName(recipe.getRecipeName())
                     .description(recipe.getDescription())
                     .status(recipe.getStatus())
-                    .averageScore(reviewScoreStorage.getAverageScore(recipe.getId()))
                     .audit(buildAuditDto(recipe.getCreated(), recipe.getLastModified()))
                     .build();
         }
@@ -127,11 +98,6 @@ public class EntityToDtoConverter {
                     recipeDto.setInstructions(
                             recipe.getInstructions().stream()
                                     .map(this::recipeInstructionToDto)
-                                    .toList()
-                    );
-                    recipeDto.setReviews(
-                            recipe.getReviews().stream()
-                                    .map(this::recipeReviewToDto)
                                     .toList()
                     );
                     return recipeDto;

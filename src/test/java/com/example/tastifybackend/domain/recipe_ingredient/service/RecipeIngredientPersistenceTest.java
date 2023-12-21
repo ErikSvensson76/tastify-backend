@@ -33,9 +33,6 @@ class RecipeIngredientPersistenceTest {
     RecipeIngredientPersistence underTest;
 
     final FakerGenerator faker = FakerGenerator.getInstance();
-    private String id;
-    private BigDecimal amount;
-    private String measurement;
 
     @Test
     void save_persist() {

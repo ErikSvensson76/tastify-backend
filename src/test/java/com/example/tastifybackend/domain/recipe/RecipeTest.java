@@ -4,7 +4,6 @@ import com.example.tastifybackend.FakerGenerator;
 import com.example.tastifybackend.domain.category.Category;
 import com.example.tastifybackend.domain.recipe_ingredient.RecipeIngredient;
 import com.example.tastifybackend.domain.recipe_instruction.RecipeInstruction;
-import com.example.tastifybackend.domain.recipe_review.RecipeReview;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -24,7 +23,6 @@ class RecipeTest {
         assertNotNull(recipe.getCategories());
         assertNotNull(recipe.getIngredients());
         assertNotNull(recipe.getInstructions());
-        assertNotNull(recipe.getReviews());
     }
 
     @Test
@@ -182,35 +180,6 @@ class RecipeTest {
         recipe.setIngredients(changedList);
 
         assertEquals(3, recipe.getIngredients().size());
-    }
-
-    @Test
-    void addReviews(){
-        RecipeReview review = fakerGenerator.randomRecipeReview();
-
-        Recipe recipe = fakerGenerator.randomRecipe();
-
-        assertDoesNotThrow(
-                () -> recipe.addReviews(review)
-        );
-
-        assertEquals(1, recipe.getReviews().size());
-        assertNotNull(review.getRecipe());
-    }
-
-    @Test
-    void removeReviews(){
-        RecipeReview review = fakerGenerator.randomRecipeReview();
-
-        Recipe recipe = fakerGenerator.randomRecipe();
-        recipe.addReviews(review);
-
-        assertDoesNotThrow(
-                () -> recipe.removeReviews(review)
-        );
-
-        assertEquals(0, recipe.getReviews().size());
-        assertNull(review.getRecipe());
     }
 
     @Test

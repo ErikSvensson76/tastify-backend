@@ -9,7 +9,6 @@ import com.example.tastifybackend.domain.recipe_ingredient.RecipeIngredient;
 import com.example.tastifybackend.domain.recipe_ingredient.service.RecipeIngredientPersistenceService;
 import com.example.tastifybackend.domain.recipe_instruction.RecipeInstruction;
 import com.example.tastifybackend.domain.recipe_instruction.service.RecipeInstructionPersistenceService;
-import com.example.tastifybackend.domain.recipe_review.service.AverageReviewScoreStorage;
 import com.example.tastifybackend.exception.EntityNotFoundException;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class RecipePersistence implements RecipePersistenceService {
     private final RecipeIngredientPersistenceService recipeIngredientService;
     private final CategoryPersistenceService categoryService;
     private final RecipeInstructionPersistenceService recipeInstructionService;
-    private final AverageReviewScoreStorage reviewScoreStorage;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -99,15 +97,11 @@ public class RecipePersistence implements RecipePersistenceService {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Error getting Recipe id: " + id));
         recipeRepository.delete(recipe);
-        reviewScoreStorage.removeEntry(id);
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void deleteAll(List<String> ids) {
-       recipeRepository.findAllById(ids).forEach(recipe -> {
-               recipeRepository.delete(recipe);
-               reviewScoreStorage.removeEntry(recipe.getId());
-       });
+        recipeRepository.deleteAll(recipeRepository.findAllById(ids));
     }
 }

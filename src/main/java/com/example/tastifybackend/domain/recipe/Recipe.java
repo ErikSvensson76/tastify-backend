@@ -4,11 +4,8 @@ import com.example.tastifybackend.domain.audit.AuditEntity;
 import com.example.tastifybackend.domain.category.Category;
 import com.example.tastifybackend.domain.recipe_ingredient.RecipeIngredient;
 import com.example.tastifybackend.domain.recipe_instruction.RecipeInstruction;
-import com.example.tastifybackend.domain.recipe_review.RecipeReview;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Immutable;
 
 import java.util.*;
 
@@ -55,12 +52,6 @@ public class Recipe extends AuditEntity {
             mappedBy = "recipe"
     )
     private List<RecipeInstruction> instructions;
-    @OneToMany(
-            cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE},
-            fetch = FetchType.LAZY,
-            mappedBy = "recipe"
-    )
-    private List<RecipeReview> reviews;
 
     public Set<Category> getCategories() {
         if(this.categories == null) this.categories = new HashSet<>();
@@ -135,37 +126,6 @@ public class Recipe extends AuditEntity {
         for (RecipeIngredient recipeIngredient : ingredients){
             if(this.ingredients.remove(recipeIngredient)){
                 recipeIngredient.setRecipe(null);
-            }
-        }
-    }
-
-
-    public List<RecipeReview> getReviews() {
-        if(this.reviews == null) this.reviews = new ArrayList<>();
-        return new ArrayList<>(reviews);
-    }
-
-    void setReviews(List<RecipeReview> reviews){
-        this.reviews = reviews;
-    }
-
-    public void addReviews(RecipeReview...reviews){
-        if(reviews == null) return;
-        if(this.reviews == null) this.reviews = new ArrayList<>();
-        for(RecipeReview review : reviews){
-            if(!this.reviews.contains(review)){
-                this.reviews.add(review);
-                review.setRecipe(this);
-            }
-        }
-    }
-
-    public void removeReviews(RecipeReview...reviews){
-        if(reviews == null) return;
-        if(this.reviews == null) this.reviews = new ArrayList<>();
-        for(RecipeReview review : reviews){
-            if(this.reviews.remove(review)){
-                review.setRecipe(null);
             }
         }
     }

@@ -5,7 +5,6 @@ import com.example.tastifybackend.domain.category.dto.CategoryDto;
 import com.example.tastifybackend.domain.recipe.RecipeStatus;
 import com.example.tastifybackend.domain.recipe_ingredient.dto.RecipeIngredientDto;
 import com.example.tastifybackend.domain.recipe_instruction.dto.RecipeInstructionDto;
-import com.example.tastifybackend.domain.recipe_review.dto.RecipeReviewDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
@@ -27,8 +26,6 @@ public class RecipeDto implements Serializable {
     private List<CategoryDto> categories;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<RecipeInstructionDto> instructions;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<RecipeReviewDto> reviews;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<RecipeIngredientDto> ingredients;
     private AuditDto audit;

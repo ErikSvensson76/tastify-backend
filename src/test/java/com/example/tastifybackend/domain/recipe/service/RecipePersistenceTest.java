@@ -61,7 +61,6 @@ class RecipePersistenceTest {
         assertEquals(input.getStatus(), actual.getStatus());
         assertEquals(input.getDescription(), actual.getDescription());
         assertEquals(1, actual.getInstructions().size());
-        assertEquals(0, actual.getReviews().size());
         assertEquals(1, actual.getIngredients().size());
         assertEquals(1, actual.getCategories().size());
     }

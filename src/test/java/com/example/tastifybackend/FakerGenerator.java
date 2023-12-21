@@ -9,8 +9,6 @@ import com.example.tastifybackend.domain.recipe_ingredient.RecipeIngredient;
 import com.example.tastifybackend.domain.recipe_ingredient.dto.RecipeIngredientInput;
 import com.example.tastifybackend.domain.recipe_instruction.RecipeInstruction;
 import com.example.tastifybackend.domain.recipe_instruction.dto.RecipeInstructionInput;
-import com.example.tastifybackend.domain.recipe_review.RecipeReview;
-import com.example.tastifybackend.domain.recipe_review.dto.RecipeReviewInput;
 import net.datafaker.Faker;
 
 import java.math.BigDecimal;
@@ -46,13 +44,6 @@ public class FakerGenerator {
     public RecipeInstruction randomInstruction(){
         return RecipeInstruction.builder()
                 .instruction(faker.lorem().sentence(5))
-                .build();
-    }
-
-    public RecipeReview randomRecipeReview(){
-        return RecipeReview.builder()
-                .comment(faker.lorem().sentence(5))
-                .score(faker.random().nextInt(1, 5))
                 .build();
     }
 
@@ -97,13 +88,6 @@ public class FakerGenerator {
     public RecipeInstructionInput randomRecipeInstructionInput(){
         return RecipeInstructionInput.builder()
                 .instruction(faker.lorem().sentence(4))
-                .build();
-    }
-
-    public RecipeReviewInput randomRecipeReviewInput(){
-        return RecipeReviewInput.builder()
-                .score(faker.random().nextInt(1, 5))
-                .comment(faker.lorem().sentence(10))
                 .build();
     }
 
