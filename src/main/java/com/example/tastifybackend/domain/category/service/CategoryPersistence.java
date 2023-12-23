@@ -3,7 +3,6 @@ package com.example.tastifybackend.domain.category.service;
 import com.example.tastifybackend.domain.category.Category;
 import com.example.tastifybackend.domain.category.dto.CategoryInput;
 import com.example.tastifybackend.domain.category.repository.CategoryRepository;
-import com.example.tastifybackend.domain.recipe.Recipe;
 import com.example.tastifybackend.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
