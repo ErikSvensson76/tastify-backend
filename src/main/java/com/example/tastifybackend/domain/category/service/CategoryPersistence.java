@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -21,21 +22,11 @@ public class CategoryPersistence implements CategoryPersistenceService{
 
     @Override
     public Category save(CategoryInput categoryInput) {
-        if(categoryInput.getId() == null){
-            return categoryRepository.findByValue(categoryInput.getValue())
-                    .orElse(categoryRepository.save(
-                            Category.builder()
-                                .value(categoryInput.getValue())
-                                .build()
-                        )
-                    );
-
-        }else{
-            Category toUpdate = categoryRepository.findById(categoryInput.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Error getting Category id: " + categoryInput.getId()));
-            toUpdate.setValue(categoryInput.getValue());
-            return categoryRepository.save(toUpdate);
-        }
+        Optional<Category> categoryOptional = categoryRepository.findByValue(categoryInput.getValue());
+        return categoryOptional.orElseGet(() -> categoryRepository.save(Category.builder()
+                .value(categoryInput.getValue())
+                .build()
+        ));
     }
 
     @Override
