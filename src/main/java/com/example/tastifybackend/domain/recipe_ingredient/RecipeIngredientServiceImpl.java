@@ -57,4 +57,23 @@ public class RecipeIngredientServiceImpl implements RecipeIngredientService {
     public void deleteAll(List<String> ids) {
         persistenceService.deleteAll(ids);
     }
+
+    @Override
+    public List<String> getAllDistinctIngredients() {
+        return repository.getAllIngredientNames();
+    }
+
+    @Override
+    public List<RecipeIngredientDto> getByRecipeId(String id) {
+        return repository.getByRecipeId(id).stream()
+            .map(converter::recipeIngredientToDto)
+            .toList();
+    }
+
+    @Override
+    public List<RecipeIngredientDto> getByIngredientName(String ingredientName) {
+        return repository.getByRecipeIngredientName(ingredientName).stream()
+            .map(converter::recipeIngredientToDto)
+            .toList();
+    }
 }

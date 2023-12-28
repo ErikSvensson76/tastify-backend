@@ -4,6 +4,7 @@ import com.example.tastifybackend.domain.recipe_ingredient.RecipeIngredient;
 import com.example.tastifybackend.domain.recipe_ingredient.dto.RecipeIngredientInput;
 import com.example.tastifybackend.domain.recipe_ingredient.repository.RecipeIngredientRepository;
 import com.example.tastifybackend.exception.EntityNotFoundException;
+import com.example.tastifybackend.misc.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,16 +28,16 @@ public class RecipeIngredientPersistence implements RecipeIngredientPersistenceS
 
     public RecipeIngredient create(RecipeIngredientInput input){
         return recipeIngredientRepository.save(RecipeIngredient.builder()
-                .ingredient(input.getIngredient())
-                .measurement(input.getMeasurement())
-                .amount(input.getAmount())
-                .build());
+            .ingredient(Util.makeFirstLetterUppercase(input.getIngredient()))
+            .measurement(input.getMeasurement())
+            .amount(input.getAmount())
+            .build());
     }
 
     public RecipeIngredient update(RecipeIngredientInput input){
         RecipeIngredient toUpdate = recipeIngredientRepository.findById(input.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Error getting RecipeIngredient id: " + input.getId()));
-        toUpdate.setIngredient(input.getIngredient());
+            .orElseThrow(() -> new EntityNotFoundException("Error getting RecipeIngredient id: " + input.getId()));
+        toUpdate.setIngredient(Util.makeFirstLetterUppercase(input.getIngredient()));
         toUpdate.setAmount(input.getAmount());
         toUpdate.setMeasurement(input.getMeasurement());
         return recipeIngredientRepository.save(toUpdate);
@@ -45,18 +46,18 @@ public class RecipeIngredientPersistence implements RecipeIngredientPersistenceS
     @Override
     public List<RecipeIngredient> saveAll(List<RecipeIngredientInput> inputs) {
         return inputs.stream()
-                .map(this::save)
-                .collect(Collectors.toList());
+            .map(this::save)
+            .collect(Collectors.toList());
     }
 
     @Override
     public void delete(String id) {
         recipeIngredientRepository.findById(id)
-                        .map(toDelete -> {
-                            Optional.ofNullable(toDelete.getRecipe())
-                                            .ifPresent(recipe -> recipe.removeIngredients(toDelete));
-                            return toDelete;
-                        }).ifPresent(recipeIngredientRepository::delete);
+          .map(toDelete -> {
+              Optional.ofNullable(toDelete.getRecipe())
+                  .ifPresent(recipe -> recipe.removeIngredients(toDelete));
+              return toDelete;
+          }).ifPresent(recipeIngredientRepository::delete);
     }
 
     @Override
