@@ -1,6 +1,6 @@
 spring:
   application:
-    name: "tastify-backend"
+    name: "recipes"
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -11,8 +11,10 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     open-in-view: off
+  profiles:
+    active: default
 server:
   servlet:
     context-path: '/api'
