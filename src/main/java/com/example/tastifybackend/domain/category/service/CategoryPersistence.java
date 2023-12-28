@@ -4,6 +4,7 @@ import com.example.tastifybackend.domain.category.Category;
 import com.example.tastifybackend.domain.category.dto.CategoryInput;
 import com.example.tastifybackend.domain.category.repository.CategoryRepository;
 import com.example.tastifybackend.exception.EntityNotFoundException;
+import com.example.tastifybackend.misc.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class CategoryPersistence implements CategoryPersistenceService{
     public Category save(CategoryInput categoryInput) {
         Optional<Category> categoryOptional = categoryRepository.findByValue(categoryInput.getValue());
         return categoryOptional.orElseGet(() -> categoryRepository.save(Category.builder()
-                .value(categoryInput.getValue())
+                .value(Util.makeFirstLetterUppercase(categoryInput.getValue()))
                 .build()
         ));
     }
