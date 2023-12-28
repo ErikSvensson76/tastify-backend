@@ -2,6 +2,7 @@ package com.example.tastifybackend.exception.handler;
 
 import com.example.tastifybackend.domain.response.ErrorResponse;
 import com.example.tastifybackend.exception.EntityNotFoundException;
+import com.example.tastifybackend.exception.MismatchedIdentifierException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,16 @@ public class TastifyBackendExceptionHandler {
     ){
         return ResponseEntity.status(404).body(
                 ErrorResponse.buildApiResponse(exception, HttpStatus.NOT_FOUND, request)
+        );
+    }
+
+    @ExceptionHandler(MismatchedIdentifierException.class)
+    public ResponseEntity<ErrorResponse> handleMismatchedIdentifierException(
+        MismatchedIdentifierException exception,
+        WebRequest request
+    ){
+        return ResponseEntity.badRequest().body(
+            ErrorResponse.buildApiResponse(exception, HttpStatus.BAD_REQUEST, request)
         );
     }
 
