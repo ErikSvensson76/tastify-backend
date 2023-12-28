@@ -4,6 +4,8 @@ package com.example.tastifybackend.api;
 import com.example.tastifybackend.domain.category.CategoryService;
 import com.example.tastifybackend.domain.category.dto.CategoryDto;
 import com.example.tastifybackend.domain.category.dto.CategoryInput;
+import com.example.tastifybackend.exception.MismatchedIdentifierException;
+import com.example.tastifybackend.misc.Util;
 import com.example.tastifybackend.validation.markers.OnPost;
 import com.example.tastifybackend.validation.markers.OnPut;
 import lombok.RequiredArgsConstructor;
@@ -12,23 +14,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
+    public static final String[] SEARCH = new String[]{"all (default)","value","contains"};
 
     @GetMapping
     public ResponseEntity<?> get(
             @RequestParam(name = "search", defaultValue = "all") String search,
-            @RequestParam(name = "value", required = false) String value
+            @RequestParam(name = "value", defaultValue = "") String value
     ){
-        return switch (search){
+        return switch (search.toLowerCase()){
             case "all" -> ResponseEntity.ok(categoryService.findAll());
             case "value" -> ResponseEntity.ok(categoryService.findByValue(value));
             case "contains" -> ResponseEntity.ok(categoryService.findByValueContains(value));
-            default -> throw new IllegalArgumentException("InvalidArgument search type not supported, search: " + search);
+            default -> throw new IllegalArgumentException(
+                String.format("InvalidArgument search type not supported, search: %s. Supported values are %s", search, Arrays.toString(SEARCH))
+            );
         };
     }
 
@@ -54,8 +61,11 @@ public class CategoryController {
             @PathVariable("id") String id,
             @Validated(OnPut.class) @RequestBody CategoryInput input
     ){
-        if(input.getId() == null){
-            input.setId(id);
+        if(input == null) throw new IllegalArgumentException("RequestBody CategoryInput input was null");
+        if(Util.isNotMatchingId(id, input.getId())){
+            throw new MismatchedIdentifierException(
+                String.format("MismatchedIdentifierException, PathVariable id: %s does not match %s", id, input.getId())
+            );
         }
         return ResponseEntity.ok(categoryService.save(input));
     }
